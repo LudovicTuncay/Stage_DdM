@@ -24,7 +24,6 @@ def callbacks_for_sidebar(app):
         Input("output-data-upload", "children"),
     )
     def update_selection_annees(_):
-        # mets a jour la fenetre des années en fonction du fichier utilisé
         marks = {}
         i = 0
         column_names = dataframe.df.columns.tolist()
@@ -43,9 +42,6 @@ def callbacks_for_sidebar(app):
         State("niveaux_filieres_dd", "options"),
     )
     def update_dd_niveaux_filieres(value, select_all, list_dict_annees, previous_state):
-        # mets a jour les niveaux en fonction de ce qui est disponible dans la
-        # selection d'années
-
         ctx = dash.callback_context
 
         # pas encore triggered
@@ -84,9 +80,6 @@ def callbacks_for_sidebar(app):
     def update_dd_filieres(
         niveaux, select_all, value, list_dict_annees, previous_state
     ):
-        # mets a jour les fillières en fonction de ce qui est disponible dans la
-        # selection d'années mis en combinaison avec les années selectionnées
-
         ctx = dash.callback_context
 
         # pas encore triggered
@@ -125,9 +118,6 @@ def callbacks_for_sidebar(app):
         State("slider_annees", "marks"),
     )
     def update_dd_annee(fillieres, niveaux, value, list_dict_annees):
-        # mets a jour les années sélectionnables en fonction de ce qui est
-        # correspond aux choix précédents (fenetre d'année, filliere, niveau)
-
         ctx = dash.callback_context
 
         # pas encore triggered
@@ -164,8 +154,6 @@ def callbacks_for_sidebar(app):
         Input("options_sidebar", "value"),
     )
     def update_diplome_to_color(options_sidebar):
-        # mets a jour les diplomes disponibles pour etre colorés dans le graphe
-        # des flux
         if "multi-diplome" not in options_sidebar:
             return {}
         else:

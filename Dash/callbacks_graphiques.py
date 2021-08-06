@@ -33,6 +33,7 @@ ORANGE = "#DE541E"
 # Le type de fichier lorsqu'on sauvegarde un graphe
 file_type = "svg"  # valeurs possibles :  'jpeg', 'png', 'webp', 'svg'
 
+# Pour transformer un nom de diplome en sa valeur numérique
 dict_diplome_to_number = {
     "3LA": "1",
     "L1": "2",
@@ -42,6 +43,8 @@ dict_diplome_to_number = {
     "M2": "6",
 }
 
+# Pour transformer la valeur numérique d'un diplome en nombre d'année nécéssaire
+# pour l'obtenir
 dict_diplome_num_to_years_needed = {
     "1": 1,
     "2": 1,
@@ -51,6 +54,7 @@ dict_diplome_num_to_years_needed = {
     "6": 5,
 }
 
+# Pour transformer la valeur numérique d'un diplome en son nom
 dict_number_to_diplome = {
     "0": "None",
     "1": "3LA",
@@ -61,6 +65,7 @@ dict_number_to_diplome = {
     "6": "M2",
 }
 
+# Les couleurs qu'on utilise pour les graphes
 colorscale = [
     GREY,  # aucun diplome
     DARK_BLUE,  # 3LA
@@ -71,6 +76,7 @@ colorscale = [
     GREEN,  # M2
 ]
 
+# POur transformer un diplome dans sa couleur correspondante
 discrete_colorscale = {
     "None": GREY,
     "3LA": DARK_BLUE,
@@ -87,14 +93,20 @@ clicks = 0
 
 
 def garder_niveau_et_formation(cell):
+    # garde le niveau et la formation d'une cellule du fichier de suivi des
+    # étudiants
     return cell.split(" - ")[0]
 
 
 def diplome_to_number(cell):
+    # Transforme un diplome en nombre
     return dict_diplome_to_number.get(cell, "0")
 
 
 def combinaisons_annees_filieres(niveaux, filieres):
+    # retourne toutes les combinaisons entre niveau et fillieres
+    # ex : niveau = ['a', 'b', 'c'] et filieres = ['1', '2'] retourne
+    # ['a1', 'a2', 'b1', 'b2', 'c1', 'c2']
     combinations = []
     if niveaux == []:
         combinations = [f"{filiere}" for filiere in filieres]
@@ -106,6 +118,9 @@ def combinaisons_annees_filieres(niveaux, filieres):
 
 
 def creer_graphe(annees, df):
+    # Créé le graphe avec les onformations contenues dans df
+    # On ne selectionne que les années dans le parametre "annees"
+
     # On commence a créer le graphe :
     dimensions = []
     for annee in annees:
@@ -117,10 +132,12 @@ def creer_graphe(annees, df):
 
     if (
         len(custom_colorscale) <= 1
-    ):  # POur régler un problème dont je ne connais pas la cause
+    ):  # Pour régler un problème dont je ne connais pas la cause
         custom_colorscale.insert(0, colorscale[0])
 
+    # On donne une couleur a chaque étudiant
     color = [colorscale[int(diplome)] for diplome in df["diplomes"]]
+    # On créé le graphe
     parcats = go.Parcats(
         dimensions=dimensions,
         line={
@@ -133,8 +150,8 @@ def creer_graphe(annees, df):
     global fig
     fig = go.Figure(data=[parcats])
     fig.update_layout(title="Graphique des flux d'étudiants")
-    # fig.update_layout(clickmode="event")
-    # fig.data[0].on_click(show_stats)
+
+    # On créé le composant qui va etre affiché dans le dashboard
     graph = dcc.Graph(
         figure=fig,
         id="graphique_flux",
@@ -144,6 +161,8 @@ def creer_graphe(annees, df):
 
 
 def creer_legende(df):
+    # Créé la légende associée au graphe des flux
+
     codes_diplomes_trouves = sorted(list(Counter(df["diplomes"]).keys()))
 
     couleurs_utilisees = [
@@ -194,6 +213,8 @@ def creer_legende(df):
 
 
 def garder_eleves_concernes(df, annee_commune, annees, combinations):
+    # On ne garde que les élèves concernés par l'année commune fixée, les années
+    # étudiées et les combinaisons de niveaux et fillières.
     masque = []
     if annee_commune in annees:
         colonne = df[annee_commune].tolist()
@@ -222,6 +243,7 @@ def garder_eleves_concernes(df, annee_commune, annees, combinations):
 
 
 def create_selection_mode():
+    # créé le type de selection des élèves dans le graphe des flux
     return html.Div(
         children=[
             "Sélection des élèves par : ",
@@ -237,6 +259,10 @@ def create_selection_mode():
 
 
 def graphe_mutlidiplome(selection_etudiant):
+    # créé le graphe représentant la moyenne des étudiants en fonction du nombre
+    # d'années passées à l'université. On colore les étudiants en fonction de
+    # leur diplome. On ajoute aussi des histogrames associés a chaque axe pour
+    # mieux comprendre la répartion des données
     moyennes = selection_etudiant["moyenne"]
 
     annees_dernier_diplome = selection_etudiant["annee_valid_diplome"].to_list()
@@ -300,6 +326,7 @@ def infos_selection_par_filiere(
     nb_etudiants_selectionnes,
     dfs_par_diplomes,
 ):
+    # Donne quelques infos sur la filliere selectionnée
     new_infos = [
         html.Div(
             [
@@ -325,6 +352,8 @@ def infos_selection_par_filiere(
 
 
 def create_graph_selection_diplome(selection_etudiant, annees_arrivee, diplome):
+    # Créé le graphe qui affiche la répartition du nombre d'années passées
+    # à l'université avant d'avoir leur diplome actuel
     annees_dernier_diplome = selection_etudiant["annee_valid_diplome"].to_list()
     annees_dernier_diplome = [
         int(annee_dernier_diplome.split("/")[-1])
@@ -352,7 +381,7 @@ def create_graph_selection_diplome(selection_etudiant, annees_arrivee, diplome):
         (trace_x_blue, trace_y_blue, hovertemplate_blue, BLUE, "Temps plus faible")
     )
 
-    # POur les étudiants qui ont validé leur diplome dans le temps
+    # Pour les étudiants qui ont validé leur diplome dans le temps
     trace_x_green = [x for x in X if x == temps_passe_theorique]
     trace_y_green = [comptes_temps_passe[x] for x in trace_x_green]
     hovertemplate_green = "<br>C'est le temps prévu pour ce diplome. Surement car l'étudiant n'a jamais redoublé."
@@ -360,6 +389,7 @@ def create_graph_selection_diplome(selection_etudiant, annees_arrivee, diplome):
         (trace_x_green, trace_y_green, hovertemplate_green, GREEN, "Temps prévu")
     )
 
+    # Pour ceux qui sont qu'une année en retard
     trace_x_yellow = [x for x in X if x == temps_passe_theorique + 1]
     trace_y_yellow = [comptes_temps_passe[x] for x in trace_x_yellow]
     hovertemplate_yellow = "<br>C'est plus que prévu. Surement car l'étudiant a redoublé une fois ou s'est réorienté."
@@ -373,6 +403,7 @@ def create_graph_selection_diplome(selection_etudiant, annees_arrivee, diplome):
         )
     )
 
+    # Pour ceux qui sont plusieurs années en retard
     trace_x_orange = [x for x in X if x > temps_passe_theorique + 1]
     trace_y_orange = [comptes_temps_passe[x] for x in trace_x_orange]
     hovertemplate_orange = "<br>C'est plus que prévu. Surement car l'étudiant a redoublé plusieurs fois ou s'est réorienté."
@@ -413,6 +444,7 @@ def create_graph_selection_diplome(selection_etudiant, annees_arrivee, diplome):
 
 
 def create_graph_selection_no_diplome(selection_etudiant, annees_arrivee):
+    # Créé le graphe qui affiche la répartition du nombre d'années passées
 
     cette_annee = datetime.datetime.now().year
     temps_passe_a_fac = [
@@ -443,7 +475,8 @@ def create_graph_selection_no_diplome(selection_etudiant, annees_arrivee):
 
 
 def infos_selection_par_diplome(selection_etudiant):
-
+    # Donne des informations sur les étudiants sélectionnés lorsqu'ils sont
+    # selectionnés par diplome.
     num_etudiants = selection_etudiant["num_etudiant"].to_list()
     annees_arrivee = [
         int("20" + num_etudiant[1:3])
@@ -479,6 +512,8 @@ def infos_selection_par_annee(
     nb_etudiants_selectionnes,
     dfs_par_diplomes,
 ):
+    # Donne des informations sur les étudiants sélectionnés lorsqu'ils sont
+    # selectionnés par année.
     new_infos = [
         html.Div(
             [
@@ -514,6 +549,8 @@ def callbacks_for_graphiques(app):
         Input("dimension_boutton", "n_clicks"),
     )
     def toggle_switch(categorie, couleur, dimension):
+        # mets a jour le graphique quand on change le mode de selection des
+        # étudiants
         ctx = dash.callback_context
 
         if not ctx.triggered:
@@ -561,6 +598,8 @@ def callbacks_for_graphiques(app):
         options,
         diplome_to_color,
     ):
+        # mets a jour le graphe des flux
+
         # Si il manque des paramètres, on fait bien attention de ne pas tracer
         # le graphe.
         if param_manquant:
@@ -627,6 +666,8 @@ def callbacks_for_graphiques(app):
     def selection_etudiant_card(
         click_data, categorie_boutton, couleur_boutton, dimension_boutton
     ):
+        # responsable de l'affichage des données supplémentaires lors de la
+        # selection des étudiants
 
         df_studied = dataframe.df_to_study
 

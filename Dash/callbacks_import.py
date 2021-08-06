@@ -13,6 +13,7 @@ import dataframe
 
 
 def parse_contents(contents, filename, date):
+    # récupère le contenu d'un fichier csv et affiche un appercu
     content_type, content_string = contents.split(",")
 
     decoded = base64.b64decode(content_string)

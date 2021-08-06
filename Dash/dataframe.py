@@ -1,5 +1,8 @@
 import pandas as pd
 
+# Initilise des dataframes pour qu'ils soient accessibles a tous les autres
+# fichiers du dashboard
+
 
 def initialize(dataframe=pd.DataFrame()):
     global df

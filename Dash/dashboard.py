@@ -18,6 +18,10 @@ from callbacks_graphiques import callbacks_for_graphiques
 
 import dataframe
 
+
+# Ce fichier s'occupe de la structure du dashboard, d'initialiser l'application
+# et de lancer le serveur local
+
 # the style arguments for the sidebar.
 SIDEBAR_STYLE = {
     "position": "fixed",
@@ -259,10 +263,12 @@ content = html.Div(
 )
 
 
+# on initialise le dashboard
 app = dash.Dash(external_stylesheets=[dbc.themes.BOOTSTRAP])
 app.layout = html.Div([sidebar, content])
 
 
+# on appelle les callbacks pour les initialiser
 callbacks_for_import(app)
 callbacks_for_sidebar(app)
 callbacks_for_errors(app)
