@@ -10,13 +10,13 @@ il faut avoir téléchargé l'application et installer toutes les dépendances. 
     1. **venv_PDF**
         * `python -m venv "venv_PDF"` pour le créer
         * `source venv_PDF/bin/activate` pour l'activer
-        * `pip install -r requirements_PDF.txt` pour installer les librairies nécéssaires
+        * `pip install -r requirements_PDF.txt` pour installer les librairies nécéssaires (trouvable dans le dossier **misc**)
         * `deactivate` pour le désactiver
         * Il faut maintenant placer le dossier **venv_PDF** créé dans le dossier **Application**
     2. **venv_Dash**
         * `python -m venv "venv_Dash"` pour le créer
         * `source venv_Dash/bin/activate` pour l'activer
-        * `pip install -r requirements_Dash.txt` pour installer les librairies nécéssaires
+        * `pip install -r requirements_Dash.txt` pour installer les librairies nécéssaires (trouvable dans le dossier **misc**)
         * `deactivate` pour le désactiver
         * Il faut maintenant placer le dossier **venv_Dash** créé dans le dossier **Dash**
 
