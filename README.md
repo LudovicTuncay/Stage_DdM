@@ -1,10 +1,13 @@
 # README
-Cette application responsable du traitement des PVs.
-Elle a été réalisé lors de mon stage au Département de Mathématiques de l'Université Paul Sabatier dans le cadre d'un stage lors de ma L3 SID
+Ces applications sont responsables du traitement des procès verbaux, de la transfomation en matrice de suivi de parcours et enfin d'un dashboard présentant les résultats
+Elles ont été réalisées lors de mon stage au Département de Mathématiques de l'Université Paul Sabatier dans le cadre d'un stage pendant de ma L3 SID (2020/2021)
 
 ## Comment lancer l'application
 
 0. Télécharger l'application et installer toutes les dépendances
+    * créer deux environements de travail :
+        1. **venv_PDF**, a placer dans le dossier **Application** et a créer avec le fichier **requirements_PDF.txt** (**python -m venv "venv_PDF"** pour le créer, **source venv_PDF/bin/activate** pour l'activer, puis **pip install -r requirements_PDF.txt** pour installer librairies nécéssaires et enfin **deactivate** pour le désactiver.)
+        2. **venv_Dash**, a placer dans le dossier **Dash** et a créer avec le fichier **requirements_Dash.txt** (**python -m venv "venv_Dash"** pour le créer, **source venv_Dash/bin/activate** pour l'activer, puis **pip install -r requirements_Dash.txt** pour installer librairies nécéssaires et enfin **deactivate** pour le désactiver.)
 2. Placer les PVs (au format pdf) à traiter dans le dossier **Application/Fichiers_pdf_input**
 3. À partir d'un terminal, se placer dans le dossier Stage_DdM
 4. Lancer le script **run_app.sh** à partir d'un terminal (commande : **./run_app.sh** il faudra peut etre lancer **chmod +x run_app.sh**)
