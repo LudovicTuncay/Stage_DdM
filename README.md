@@ -8,23 +8,23 @@ Elles ont été réalisées lors de mon stage au Département de Mathématiques 
 il faut avoir téléchargé l'application et installer toutes les dépendances. Pour ce faire on va devoir suivre la démarche suivante :
 * créer deux environements de travail :
     1. **venv_PDF**
-        * **python -m venv "venv_PDF"** pour le créer
-        * **source venv_PDF/bin/activate** pour l'activer
-        * **pip install -r requirements_PDF.txt** pour installer les librairies nécéssaires
-        * **deactivate** pour le désactiver
+        * `python -m venv "venv_PDF"` pour le créer
+        * `source venv_PDF/bin/activate` pour l'activer
+        * `pip install -r requirements_PDF.txt` pour installer les librairies nécéssaires
+        * `deactivate` pour le désactiver
         * Il faut maintenant placer le dossier **venv_PDF** créé dans le dossier **Application**
     2. **venv_Dash**
-        * **python -m venv "venv_Dash"** pour le créer
-        * **source venv_Dash/bin/activate** pour l'activer
-        * **pip install -r requirements_Dash.txt** pour installer les librairies nécéssaires
-        * **deactivate** pour le désactiver
+        * `python -m venv "venv_Dash"` pour le créer
+        * `source venv_Dash/bin/activate` pour l'activer
+        * `pip install -r requirements_Dash.txt` pour installer les librairies nécéssaires
+        * `deactivate` pour le désactiver
         * Il faut maintenant placer le dossier **venv_Dash** créé dans le dossier **Dash**
 
 ## Comment lancer l'application
 
 1. Placer les PVs (au format pdf) à traiter dans le dossier **Application/Fichiers_pdf_input**
 3. À partir d'un terminal, se placer dans le dossier Stage_DdM
-4. Lancer le script **run_app.sh** à partir d'un terminal (commande : **./run_app.sh** il faudra peut etre lancer **chmod +x run_app.sh**)
+4. Lancer le script **run_app.sh** à partir d'un terminal (commande : `./run_app.sh` il faudra peut etre lancer `chmod +x run_app.sh`)
 5. Suivre les instructions affichées
 
 ### Notes
