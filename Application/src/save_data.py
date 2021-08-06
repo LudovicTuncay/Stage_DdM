@@ -1,14 +1,17 @@
 import os
 
 
-def sauvegarder_data(pdf_file_name, df_complet, output_path="Fichiers_csv_output"):
-
+def sauvegarder_data(pdf_file_name,
+                     df_complet,
+                     output_path="Fichiers_csv_output"):
+    # Sauvegarde les données d'un dataframe (représentant les données d'un
+    # unique PV) dans un fichier csv dans le dossier "output_path"
     csv_file_name = pdf_file_name.split(".")
     csv_file_name[-1] = "csv"
     csv_file_name = ".".join(csv_file_name)
-    df_complet.to_csv(
-        os.path.join(output_path, csv_file_name), sep=";", index_label="num_etudiant"
-    )
+    df_complet.to_csv(os.path.join(output_path, csv_file_name),
+                      sep=";",
+                      index_label="num_etudiant")
 
 
 def deplacer_pdf(
@@ -18,7 +21,8 @@ def deplacer_pdf(
     fichier_traite_path="Fichiers_pdf_traites",
     fichier_erreur_path="Fichiers_pdf_erreur",
 ):
-
+    # Déplace un ficher dans un autre dossier. Utilisé pour déplacer les pdf
+    # dans les dossiers traités ou ceux qui ont causé une erreur
     if not erreur:
         os.replace(
             os.path.join(input_path, pdf_file_name),

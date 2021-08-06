@@ -8,9 +8,9 @@ from traiter_data import premier_traitement, second_traitement, fusionner_liste_
 from save_data import sauvegarder_data, deplacer_pdf
 
 
-def traiter_pdf(
-    pdf_file_name, input_path="Fichiers_pdf_input", output_path="Fichiers_csv_output"
-):
+def traiter_pdf(pdf_file_name,
+                input_path="Fichiers_pdf_input",
+                output_path="Fichiers_csv_output"):
     """
     DESCRIPTION:
         Traite un fichier pdf (procès verbal) du début à la fin et fait
@@ -28,7 +28,8 @@ def traiter_pdf(
         # Donc dans notre cas, cela correspond à une page par dataframe.
         # On récupère aussi diverses informations sur le procès verbal (session,
         # année, niveau et domaine)
-        liste_df, infos_pv = import_data(os.path.join(input_path, pdf_file_name))
+        liste_df, infos_pv = import_data(
+            os.path.join(input_path, pdf_file_name))
         error_code = 1
 
         # Premier traitement de chaque cellulle pour qu'on puisse faire un
@@ -53,7 +54,8 @@ def traiter_pdf(
         deplacer_pdf(pdf_file_name)
 
         with open(log_file_name, "a") as log_file:
-            log_file.write(f"File {pdf_file_name} finished without any error.\n")
+            log_file.write(
+                f"File {pdf_file_name} finished without any error.\n")
     except Exception as e:
 
         # deplacer_pdf(pdf_file_name, erreur=True)
@@ -65,6 +67,15 @@ def traiter_pdf(
 
 
 def is_pdf_file(file):
+    """
+    DESCRIPTION:
+        vérifie qu'un fichier est un pdf a partir de son nom de fichier.
+    ---------------------------------------------------------------------------
+    INPUT:
+        file (str) : le nom du fichier
+    OUTPUT:
+        Booléen : True si le fichier est un pdf, False sinon
+    """
     kind = filetype.guess(file)
     if kind is None:
         return False
@@ -84,9 +95,11 @@ if __name__ == "__main__":
     input_path = "Fichiers_pdf_input"
 
     input_files = [
-        f for f in os.listdir(input_path) if is_pdf_file(os.path.join(input_path, f))
+        f for f in os.listdir(input_path)
+        if is_pdf_file(os.path.join(input_path, f))
     ]
 
-    process_map(
-        traiter_pdf, input_files, max_workers=available_CPUs, desc="Fichiers traités "
-    )
+    process_map(traiter_pdf,
+                input_files,
+                max_workers=available_CPUs,
+                desc="Fichiers traités ")

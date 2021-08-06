@@ -21,6 +21,15 @@ valeur_annee = {
 
 
 def get_infos(csv_file_name):
+    """
+    DESCRIPTION :
+        Récupère les informations d'un fichiers csv a partir de son nom.
+    ----------------------------------------------------------------------------
+    INPUT :
+        csv_file_name (str) : Le nom du fichier
+    OUTPUT :
+        l'année scolaire, le niveau scolaire, le domaine et la session
+    """
     name = csv_file_name.split(".")[0]
 
     dates = name.split(" ")[-1]
@@ -37,6 +46,19 @@ def get_infos(csv_file_name):
 
 
 def ajouter_au_suivi(csv_file_name, dataframe_suivi_etudiant):
+    """
+    DESCRIPTION :
+        Ajoute les étudiants dans le fichier csv dans le dataframe représentant
+        le suivi des étudiants
+    ----------------------------------------------------------------------------
+    INPUT :
+        csv_file_name (str) : Le nom du fichier a ajouter
+        dataframe_suivi_etudiant : Le dataframe représentant le suivi des 
+        étudiants
+    OUTPUT :
+        un nouveau dataframe qui correspond a dataframe_suivi_etudiant avec les 
+        information du fichiers csv en plus.
+    """
     suivi_df = dataframe_suivi_etudiant.copy()
 
     dates, niveau, domaine, session = get_infos(csv_file_name)
@@ -68,16 +90,12 @@ def ajouter_au_suivi(csv_file_name, dataframe_suivi_etudiant):
 
         if num_etudiant not in suivi_df.index:
             new_etudiant = [
-                "Hors"
-                if col
-                not in [
+                "Hors" if col not in [
                     "last_annee_validee",
                     "last_diplome_valide",
                     "moyenne",
                     "nb_presence_pv",
-                ]
-                else None
-                for col in suivi_df.columns
+                ] else None for col in suivi_df.columns
             ]
 
             suivi_df.loc[num_etudiant] = new_etudiant
@@ -96,31 +114,43 @@ def ajouter_au_suivi(csv_file_name, dataframe_suivi_etudiant):
         # Si il n'y a rien dans la cellule, on la remplit normalement.
         split_content = suivi_df.loc[num_etudiant, dates].split(" - ")
         if len(split_content) <= 1 or split_content[-1] < session:
-            suivi_df.loc[num_etudiant, dates] = f"{niveau} {domaine} - {session}"
+            suivi_df.loc[num_etudiant,
+                         dates] = f"{niveau} {domaine} - {session}"
 
         niveau_valide = suivi_df.loc[num_etudiant, "last_diplome_valide"]
-        if code in codes_valides and valeur_annee[niveau] > valeur_annee[niveau_valide]:
+        if code in codes_valides and valeur_annee[niveau] > valeur_annee[
+                niveau_valide]:
             suivi_df.loc[num_etudiant, "last_diplome_valide"] = niveau
             suivi_df.loc[num_etudiant, "last_annee_validee"] = dates
     return suivi_df
 
 
 def creer_suivi_etudiant():
-    suivi_df = pd.DataFrame(
-        columns=[
-            "num_etudiant",
-            "last_annee_validee",
-            "last_diplome_valide",
-            "moyenne",
-            "nb_presence_pv",
-        ]
-    )
+    """
+    DESCRIPTION :
+        Créé le dataframe représentant le suivi des étudiants a partir des 
+        fichiers produits lors de la transformation des procès verbaux (donc on 
+        prend les fichiers dans le dossier Fichiers_csv_output. On peut le 
+        modifier en haut de ce fichier en modifiant la variable globale 
+        csv_files_path.)
+    ----------------------------------------------------------------------------
+    OUTPUT :
+        Nouveau dataframe qui reprend le parcours des étudiants
+    """
+    suivi_df = pd.DataFrame(columns=[
+        "num_etudiant",
+        "last_annee_validee",
+        "last_diplome_valide",
+        "moyenne",
+        "nb_presence_pv",
+    ])
     suivi_df.set_index("num_etudiant", inplace=True)
 
     os.chdir(os.path.dirname(sys.path[0]))
 
     csv_files = [
-        file for file in os.listdir(path=csv_files_path) if file.split(".")[-1] == "csv"
+        file for file in os.listdir(path=csv_files_path)
+        if file.split(".")[-1] == "csv"
     ]
 
     for csv_file in tqdm(csv_files, desc="Fichiers traités"):
@@ -132,7 +162,9 @@ def creer_suivi_etudiant():
         suivi_df["moyenne"] / suivi_df["nb_presence_pv"],
     )
 
-    suivi_df["moyenne"] = [round(moyenne, 2) for moyenne in suivi_df["moyenne"]]
+    suivi_df["moyenne"] = [
+        round(moyenne, 2) for moyenne in suivi_df["moyenne"]
+    ]
 
     suivi_df.drop(columns="nb_presence_pv", inplace=True)
 
@@ -141,6 +173,16 @@ def creer_suivi_etudiant():
 
 
 def garder_niveau_et_formation(cell):
+    """
+    DESCRIPTION :
+        Garde uniquement le niveau et la formation d'une cellule
+    ----------------------------------------------------------------------------
+    INPUT: 
+        cell (str): le contenu d'une cellule. Le format attendu est du type
+        "niveau formation - session"
+    OUTPUT :
+        le niveau et la formation uniquement (au format "niveau formation")
+    """
     return cell.split(" - ")[0]
 
 
@@ -189,7 +231,6 @@ def garder_niveau_et_formation(cell):
 
 #             matrice.loc[filliere, annee] = fillieres_dict[filliere]
 #     return matrice
-
 
 if __name__ == "__main__":
 

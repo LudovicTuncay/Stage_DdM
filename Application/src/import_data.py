@@ -115,14 +115,27 @@ def get_niveau_et_formation(texte):
     for i, mot in enumerate(texte):
         if mot in codes_CUPGE.keys():
             niveau = codes_CUPGE[mot]
-            formation = " ".join(texte[i+2:]).strip()
+            formation = " ".join(texte[i + 2:]).strip()
         elif mot in codes_annees:
             niveau = mot
-            formation = " ".join(texte[i+1:]).strip()
+            formation = " ".join(texte[i + 1:]).strip()
     return niveau, formation
 
 
 def recuperer_infos_pv(pdf_file_path):
+    """
+    DESCRIPTION :
+        Récupère les infos d'un fichier pdf (date, numéro de session, niveau,
+        formation)
+    ---------------------------------------------------------------------------
+    INPUT :
+        pdf_file_path (str) : le chemin vers le ficher dont on doit extraire les
+        informations
+    OUTPUT :
+        un tuple de 4 valeurs de la forme (date, numéro de session, niveau, 
+        formation) qui reprends les informations présentes dans l'entete du 
+        fichier.
+    """
     # On récupère le texte d'une des premières pages
     try:
         text = extract_text(pdf_file_path, page_numbers=[2])
@@ -150,6 +163,15 @@ def recuperer_infos_pv(pdf_file_path):
 
 
 def import_data(pdf_file_path):
+    """
+    DESCRIPTION :
+        Importe les données du fichier
+    ---------------------------------------------------------------------------
+    INPUT :
+        pdf_file_path (str) : le chemin vers le ficher
+    OUTPUT :
+        un dataframe qui reprends les données du fichier (non formaté)
+    """
     infos_pv = recuperer_infos_pv(pdf_file_path)
     liste_df = recuperer_tables_pdf(pdf_file_path)
     return liste_df, infos_pv
